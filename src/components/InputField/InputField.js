@@ -37,11 +37,7 @@ const InputField = () => {
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
 
-      var raw = JSON.stringify({
-        name: e.target.value,
-        isChecked: false,
-        isDeleted: false,
-      });
+      var raw = JSON.stringify(task);
 
       var requestOptions = {
         method: "POST",
@@ -50,7 +46,7 @@ const InputField = () => {
         redirect: "follow",
       };
 
-      fetch("http://localhost:3001/users", requestOptions)
+      fetch(process.env.REACT_APP_global_uri + "users", requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
