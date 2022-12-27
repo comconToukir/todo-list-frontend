@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
+import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 
@@ -29,6 +30,7 @@ const TaskItem = ({ item }) => {
   const classes = useStyles();
 
   return (
+    <Paper>
       <Grid container justifyContent='space-between' style={{padding: 12}}>
         <FormControlLabel control={<Checkbox name="checkedC" />} label={item} />
         <Grid>
@@ -40,6 +42,7 @@ const TaskItem = ({ item }) => {
           </Button>
         </Grid>
       </Grid>
+    </Paper>
   );
 };
 
