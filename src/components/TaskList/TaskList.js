@@ -3,11 +3,11 @@ import React from "react";
 import TaskItem from "../TaskItem/TaskItem";
 import Grid from '@material-ui/core/Grid';
 
-const TaskList = () => {
+const TaskList = ({ tasks, handleUpdate }) => {
   return (
     <Grid container direction="row" style={{padding: 9}}>
-      {[1, 2, 3, 4].map((item, i) => {
-        return <TaskItem key={i} item={item} />;
+      {tasks.map((item, i) => {
+        return <TaskItem key={i} item={item} handleUpdate={handleUpdate} />;
       })}
     </Grid>
   );

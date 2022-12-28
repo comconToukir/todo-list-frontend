@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const InputField = () => {
+const InputField = ({ handleAddTask }) => {
   const classes = useStyles();
 
   const [task, setTask] = useState({});
@@ -47,8 +47,13 @@ const InputField = () => {
       };
 
       fetch(process.env.REACT_APP_global_uri + "users", requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
+        .then((response) => response.json())
+        .then((result) => {
+          if (result._id) {
+            handleAddTask(task)
+            e.target.value = "";
+          }
+        })
         .catch((error) => console.log("error", error));
     }
   };
