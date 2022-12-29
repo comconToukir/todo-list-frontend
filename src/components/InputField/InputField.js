@@ -51,6 +51,7 @@ const InputField = ({ handleAddTask }) => {
           if (result._id) {
             handleAddTask(result)
             e.target.value = "";
+            e.target.blur();
           }
         })
         .catch((error) => console.log("error", error));

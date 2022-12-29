@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -6,7 +6,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import TextField  from '@material-ui/core/TextField';
+import TextField from "@material-ui/core/TextField";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,54 +36,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TaskItem = ({ item, handleUpdate }) => {
+const TaskItem = ({
+  item,
+  handleTaskUpdate,
+  openDeleteModal
+}) => {
   const classes = useStyles();
 
-  // const [updateTask, setUpdateTask] = useState("");
   const [editable, setEditable] = useState(false);
 
-  // console.log(editable);
-
-  // const handleCheck = () => {
-  //   setUpdateTask((updateTask) => ({ isChecked: !item.isChecked }));
-  // };
-
-  // const updateRef = useRef(updateTask);
-
   const handleCheckUpdate = () =>
-    handleTaskUpdate({ isChecked: !item.isChecked });
+    handleTaskUpdate({ isChecked: !item.isChecked }, item._id);
 
   const handleEditUpdate = (e) => {
     const task = e.target.value;
-    if(e.key === "Enter") {
-      handleTaskUpdate({ name: task })
+    if (e.key === "Enter") {
+      handleTaskUpdate({ name: task }, item._id);
       setEditable(false);
     }
-  };
-
-  // const handleChange = (e) => {
-  //   const name = e.target.value;
-
-  //   setUpdateTask((updateTask) => ({
-  //     name: name
-  //   }));
-  // };
-
-  const handleTaskUpdate = (data) => {
-    fetch(process.env.REACT_APP_global_uri + "users/" + item._id, {
-      method: "PATCH",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        if (result._id) {
-          handleUpdate(result);
-        }
-      })
-      .catch((error) => console.log("error", error));
   };
 
   return (
@@ -97,16 +67,16 @@ const TaskItem = ({ item, handleUpdate }) => {
         <form
           onSubmit={(e) => e.preventDefault()}
           className={classes.root}
-          style={{ display: "flex", width: "max-width" }}
+          style={{ display: "flex", flex: 1}}
           noValidate
           autoComplete="off"
         >
           <TextField
-            // onChange={handleChange}
+            style={{width: "100%"}}
             onKeyDown={handleEditUpdate}
             defaultValue={item.name}
             id="outlined-basic"
-            label="Add a Task"
+            label="Edit Task"
             variant="outlined"
           />
         </form>
@@ -120,10 +90,10 @@ const TaskItem = ({ item, handleUpdate }) => {
               onChange={handleCheckUpdate}
             />
           }
-          label={item.name}
+          label={item.isChecked ? <s style={{color: "gray"}}>{item.name}</s> : item.name}
         />
       )}
-      <Grid container alignItems="center" style={{ width: "max-content" }}>
+      <Grid container alignItems="center" style={{ width: "max-content", marginLeft: "10px", marginRight: "10px"}}>
         <Button
           variant="contained"
           color="primary"
@@ -134,9 +104,10 @@ const TaskItem = ({ item, handleUpdate }) => {
             className="action-icon"
             style={{ height: 17, marginRight: 1, display: "none" }}
           />
-          Edit
+          { editable ? "Cancel" : "Edit"  }
         </Button>
         <Button
+          onClick={() => openDeleteModal(item._id)}
           variant="contained"
           color="secondary"
           style={{ padding: "4px 10px" }}
