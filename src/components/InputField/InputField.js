@@ -23,7 +23,6 @@ const InputField = ({ handleAddTask }) => {
     const isDeleted = false;
 
     setTask((task) => ({
-      ...task,
       name: name,
       isChecked: isChecked,
       isDeleted: isDeleted,
@@ -50,7 +49,7 @@ const InputField = ({ handleAddTask }) => {
         .then((response) => response.json())
         .then((result) => {
           if (result._id) {
-            handleAddTask(task)
+            handleAddTask(result)
             e.target.value = "";
           }
         })

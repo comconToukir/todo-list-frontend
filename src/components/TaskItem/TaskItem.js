@@ -3,10 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
-import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import TextField  from '@material-ui/core/TextField';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,8 +38,11 @@ const useStyles = makeStyles((theme) => ({
 
 const TaskItem = ({ item, handleUpdate }) => {
   const classes = useStyles();
-  const [updateTask, setUpdateTask] = useState("");
-  // const [isChecked, setIsChecked] = useState(item.isChecked);
+
+  // const [updateTask, setUpdateTask] = useState("");
+  const [editable, setEditable] = useState(false);
+
+  // console.log(editable);
 
   // const handleCheck = () => {
   //   setUpdateTask((updateTask) => ({ isChecked: !item.isChecked }));
@@ -47,16 +50,32 @@ const TaskItem = ({ item, handleUpdate }) => {
 
   // const updateRef = useRef(updateTask);
 
-  const handleTaskUpdate = () => {
-    // handleCheck();
-    // console.log(updateTask);
-    
+  const handleCheckUpdate = () =>
+    handleTaskUpdate({ isChecked: !item.isChecked });
+
+  const handleEditUpdate = (e) => {
+    const task = e.target.value;
+    if(e.key === "Enter") {
+      handleTaskUpdate({ name: task })
+      setEditable(false);
+    }
+  };
+
+  // const handleChange = (e) => {
+  //   const name = e.target.value;
+
+  //   setUpdateTask((updateTask) => ({
+  //     name: name
+  //   }));
+  // };
+
+  const handleTaskUpdate = (data) => {
     fetch(process.env.REACT_APP_global_uri + "users/" + item._id, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify({ isChecked: !item.isChecked }),
+      body: JSON.stringify(data),
     })
       .then((response) => response.json())
       .then((result) => {
@@ -74,22 +93,42 @@ const TaskItem = ({ item, handleUpdate }) => {
       justifyContent="space-between"
       className={classes.gridItem}
     >
-      <FormControlLabel
-        control={
-          <Checkbox
-            name="checked"
-            color="primary"
-            checked={item.isChecked}
-            onChange={handleTaskUpdate}
+      {editable ? (
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          className={classes.root}
+          style={{ display: "flex", width: "max-width" }}
+          noValidate
+          autoComplete="off"
+        >
+          <TextField
+            // onChange={handleChange}
+            onKeyDown={handleEditUpdate}
+            defaultValue={item.name}
+            id="outlined-basic"
+            label="Add a Task"
+            variant="outlined"
           />
-        }
-        label={item.name}
-      />
+        </form>
+      ) : (
+        <FormControlLabel
+          control={
+            <Checkbox
+              name="checked"
+              color="primary"
+              checked={item.isChecked}
+              onChange={handleCheckUpdate}
+            />
+          }
+          label={item.name}
+        />
+      )}
       <Grid container alignItems="center" style={{ width: "max-content" }}>
         <Button
           variant="contained"
           color="primary"
           style={{ marginRight: 8, padding: "4px 10px" }}
+          onClick={() => setEditable((editable) => !editable)}
         >
           <EditIcon
             className="action-icon"
