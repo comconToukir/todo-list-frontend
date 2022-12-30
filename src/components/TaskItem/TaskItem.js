@@ -6,6 +6,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import CloseIcon from '@material-ui/icons/Close';
 import TextField from "@material-ui/core/TextField";
 
 const useStyles = makeStyles((theme) => ({
@@ -19,6 +20,16 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 15,
     border: "1px solid lightgray",
     borderRadius: 3,
+
+    "& .MuiFormControlLabel-root": {
+      overflow: "hidden"
+    },
+
+    "& .action-icon": {
+      height: 17,
+      marginRight: 1,
+      display: "none"
+    },
 
     "&:hover": {
       border: "1px solid black",
@@ -67,12 +78,12 @@ const TaskItem = ({
         <form
           onSubmit={(e) => e.preventDefault()}
           className={classes.root}
-          style={{ display: "flex", flex: 1}}
+          style={{ display: "flex", flex: 1 }}
           noValidate
           autoComplete="off"
         >
           <TextField
-            style={{width: "100%"}}
+            style={{ width: "100%" }}
             onKeyDown={handleEditUpdate}
             defaultValue={item.name}
             id="outlined-basic"
@@ -82,29 +93,32 @@ const TaskItem = ({
         </form>
       ) : (
         <FormControlLabel
+          style={{ display: "flex", flex: 1, }}
           control={
             <Checkbox
+              style={{ textOverflow: "ellipsis" }}
               name="checked"
               color="primary"
               checked={item.isChecked}
               onChange={handleCheckUpdate}
             />
           }
-          label={item.isChecked ? <s style={{color: "gray"}}>{item.name}</s> : item.name}
+          label={<span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.isChecked ? <s style={{ color: "gray", }}>{item.name}</s> : item.name}</span>}
         />
       )}
-      <Grid container alignItems="center" style={{ width: "max-content", marginLeft: "10px", marginRight: "10px"}}>
+      <Grid container alignItems="center" style={{ width: "max-content", marginLeft: "10px", marginRight: "10px" }}>
         <Button
           variant="contained"
           color="primary"
           style={{ marginRight: 8, padding: "4px 10px" }}
           onClick={() => setEditable((editable) => !editable)}
         >
-          <EditIcon
-            className="action-icon"
-            style={{ height: 17, marginRight: 1, display: "none" }}
-          />
-          { editable ? "Cancel" : "Edit"  }
+          {editable ? <>
+            <CloseIcon className="action-icon" />
+            Cancel
+          </> : <>
+            <EditIcon className="action-icon" />
+            Edit</>}
         </Button>
         <Button
           onClick={() => openDeleteModal(item._id)}
@@ -114,7 +128,7 @@ const TaskItem = ({
         >
           <DeleteIcon
             className="action-icon"
-            style={{ height: 17, marginRight: 1, display: "none" }}
+          // style={{ height: 17, marginRight: 1, display: "none" }}
           />
           Delete
         </Button>
