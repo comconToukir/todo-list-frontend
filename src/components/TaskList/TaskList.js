@@ -3,7 +3,7 @@ import TaskItem from "../TaskItem/TaskItem";
 import Grid from "@material-ui/core/Grid";
 import DeleteModal from "../DeleteModal/DeleteModal";
 
-const TaskList = ({ tasks, handleUpdate, fetchAll }) => {
+const TaskList = ({ tasks, setTasks, handleUpdate }) => {
   const [open, setOpen] = useState(false);
   const [deletingId, setDeletingId] = useState("second");
 
@@ -27,14 +27,32 @@ const TaskList = ({ tasks, handleUpdate, fetchAll }) => {
     })
       .then((response) => response.json())
       .then((result) => {
-      console.log(result)
         if (result._id) {
           handleUpdate(result);
-          console.log('object');
         }
       })
       .catch((error) => console.log("error", error));
   };
+
+  const handleDelete = (id) => {
+    fetch(process.env.REACT_APP_global_uri + "users/" + id, {
+      method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ isDeleted: true }),
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result._id) {
+          const newTasks = tasks.filter((task) => task._id !== id);
+
+          setTasks(newTasks);
+        }
+      })
+      .catch((error) => console.log("error", error));
+
+  }
 
   return (
     <>
@@ -56,8 +74,7 @@ const TaskList = ({ tasks, handleUpdate, fetchAll }) => {
         open={open}
         handleClose={handleClose}
         deletingId={deletingId}
-        handleTaskUpdate={handleTaskUpdate}
-        fetchAll={fetchAll}
+        handleDelete={handleDelete}
       />
     </>
   );

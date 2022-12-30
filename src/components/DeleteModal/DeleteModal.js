@@ -8,15 +8,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 
-const DeleteModal = ({ open, handleClose, deletingId, handleTaskUpdate, fetchAll}) => {
+const DeleteModal = ({ open, handleClose, deletingId, handleDelete }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // console.log(open);
-
   const confirmDelete = () => {
-    handleTaskUpdate({ isDeleted: true }, deletingId);
-    fetchAll()
+    handleDelete(deletingId)
     handleClose();
   }
 
