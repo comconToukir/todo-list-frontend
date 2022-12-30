@@ -5,15 +5,28 @@ import TaskList from './components/TaskList/TaskList';
 import { useEffect, useState } from 'react';
 
 function App() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState([
+  {
+    "_id": "63af008995c9253eab34b365",
+    "name": "new task",
+    "isChecked": false,
+    "isDeleted": false
+  },
+  {
+    "_id": "63af008d95c9253eab34b367",
+    "name": "tsk 2",
+    "isChecked": false,
+    "isDeleted": false
+  }
+]);
 
   const fetchAll = () => fetch(process.env.REACT_APP_global_uri + "users")
   .then(res => res.json())
   .then(data => setTasks(data))
 
-  useEffect(() => {
-    fetchAll();
-  }, []);
+  // useEffect(() => {
+  //   fetchAll();
+  // }, []);
 
   const handleAddTask = (task) => {
     setTasks((tasks) => ([

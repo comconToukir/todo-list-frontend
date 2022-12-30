@@ -93,10 +93,10 @@ const TaskItem = ({
         </form>
       ) : (
         <FormControlLabel
-          style={{ display: "flex", flex: 1, }}
+          style={{ display: "flex", flex: 1, overflow: "hidden" }}
           control={
             <Checkbox
-              style={{ textOverflow: "ellipsis" }}
+              // style={{ textOverflow: "ellipsis" }}
               name="checked"
               color="primary"
               checked={item.isChecked}

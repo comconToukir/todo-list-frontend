@@ -47,13 +47,11 @@ const InputField = ({ handleAddTask }) => {
       fetch(process.env.REACT_APP_global_uri + "users", requestOptions)
         .then((response) => response.json())
         .then((result) => {
-          console.log(result);
           if (result._id) {
             handleAddTask(result)
             e.target.value = "";
             e.target.blur();
             setTask({});
-
           }
         })
         .catch((error) => console.log("error", error));
