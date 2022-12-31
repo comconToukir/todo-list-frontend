@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { createRef, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 
@@ -14,6 +14,8 @@ const useStyles = makeStyles((theme) => ({
 
 const InputField = ({ handleAddTask }) => {
   const classes = useStyles();
+
+  const inputRef = createRef();
 
   const [task, setTask] = useState({});
 
@@ -49,9 +51,10 @@ const InputField = ({ handleAddTask }) => {
         .then((result) => {
           if (result._id) {
             handleAddTask(result)
+            setTask({});
             e.target.value = "";
             e.target.blur();
-            setTask({});
+            inputRef.current.blur();
           }
         })
         .catch((error) => console.log("error", error));
@@ -65,6 +68,7 @@ const InputField = ({ handleAddTask }) => {
       style={{ display: "flex" }}
       noValidate
       autoComplete="off"
+      ref={inputRef}
     >
       <TextField
         onChange={handleChange}
